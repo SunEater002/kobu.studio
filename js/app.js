@@ -135,6 +135,122 @@ $("filtros").addEventListener("click", e => {
 });
 pintarGaleria();
 
+/* ---------- Opiniones (Supabase: se envían pendientes y solo se ven las aprobadas) ---------- */
+(function () {
+  const O = CONFIG.opiniones || {};
+  const lista = $("op-lista");
+  const aviso = $("op-aviso");
+  const configurado = !!(O.supabaseUrl && O.supabaseKey && O.tabla);
+  const api = (q) => O.supabaseUrl + "/rest/v1/" + O.tabla + (q || "");
+  const cab = { apikey: O.supabaseKey, "Content-Type": "application/json" };
+  const porPagina = O.porPagina || 6;
+  const espera = (O.esperaMinutos == null ? 5 : O.esperaMinutos) * 60000;
+  const guardar = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+  const leer = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const estrellas = (n) => "★".repeat(n) + "☆".repeat(5 - n);
+
+  $("op-intro").textContent = CONFIG.opinionesIntro;
+  let todos = [], visibles = 0, calif = 0;
+
+  function aviso_(txt, ok) { aviso.textContent = txt; aviso.className = "op-aviso " + (ok ? "ok" : "err"); }
+  function vacio(txt) {
+    const d = document.createElement("div"); d.className = "reviews-empty"; d.textContent = txt;
+    lista.replaceChildren(d); $("op-mas").hidden = true;
+  }
+
+  // Se usa textContent (nunca innerHTML) para que nadie pueda inyectar código con su comentario.
+  function tarjeta(c) {
+    const card = document.createElement("article"); card.className = "review";
+    const st = document.createElement("span"); st.className = "stars"; st.setAttribute("role", "img");
+    st.setAttribute("aria-label", c.calificacion + " de 5 estrellas");
+    st.textContent = estrellas(c.calificacion);
+    const p = document.createElement("p"); p.textContent = c.comentario;
+    const who = document.createElement("div"); who.className = "review-who";
+    const b = document.createElement("b"); b.textContent = c.nombre;
+    const fecha = new Date(c.creado).toLocaleDateString("es-MX", { day: "numeric", month: "long", year: "numeric" });
+    const meta = document.createElement("span"); meta.textContent = c.pedido ? c.pedido + ", " + fecha : fecha;
+    who.append(b, meta);
+    card.append(st, p, who);
+    if (c.respuesta) {
+      const r = document.createElement("div"); r.className = "reply";
+      const t = document.createElement("strong"); t.textContent = CONFIG.marca + " respondió:";
+      const rp = document.createElement("span"); rp.textContent = c.respuesta;
+      r.append(t, rp); card.append(r);
+    }
+    return card;
+  }
+  function pintar() {
+    lista.replaceChildren(...todos.slice(0, visibles).map(tarjeta));
+    $("op-mas").hidden = visibles >= todos.length;
+  }
+  $("op-mas").addEventListener("click", () => { visibles = Math.min(visibles + porPagina, todos.length); pintar(); });
+
+  async function cargar() {
+    if (!configurado) return vacio("Las opiniones estarán disponibles pronto.");
+    try {
+      const r = await fetch(api("?select=id,nombre,pedido,calificacion,comentario,respuesta,creado&estado=eq.aprobado&order=creado.desc&limit=100"), { headers: cab });
+      if (!r.ok) throw new Error(r.status);
+      todos = await r.json();
+    } catch (e) { return vacio("No pudimos cargar las opiniones. Intenta más tarde."); }
+    if (!todos.length) return vacio("Sé el primero en dejar tu opinión.");
+    const prom = todos.reduce((s, c) => s + c.calificacion, 0) / todos.length;
+    $("op-intro").textContent = CONFIG.opinionesIntro + " Promedio de " + prom.toFixed(1).replace(".0", "") + " de 5 en " + todos.length + (todos.length === 1 ? " opinión." : " opiniones.");
+    visibles = Math.min(porPagina, todos.length);
+    pintar();
+  }
+
+  // Estrellas del formulario
+  function pintarEstrellas() {
+    $("op-estrellas").innerHTML = [1,2,3,4,5].map(n => `<button type="button" data-n="${n}" aria-label="${n} ${n === 1 ? "estrella" : "estrellas"}" aria-pressed="${n <= calif}">★</button>`).join("");
+  }
+  $("op-estrellas").addEventListener("click", e => {
+    const b = e.target.closest("button[data-n]"); if (!b) return;
+    calif = +b.dataset.n; pintarEstrellas();
+  });
+  pintarEstrellas();
+
+  // Plan B: si no se puede enviar, se ofrece mandarla por WhatsApp
+  function ofrecerWhatsApp(nombre, pedido, comentario) {
+    const l = ["Hola " + CONFIG.marca + ", quiero dejar mi opinión:", "Nombre: " + (nombre || "sin indicar")];
+    if (pedido) l.push("Qué pedí: " + pedido);
+    l.push("Calificación: " + (calif || "sin elegir") + " de 5", "Opinión: " + (comentario || "(escribe aquí tu opinión)"), "Autorizo que se publique mi opinión en la página.");
+    $("op-wa-link").href = waLink(l.join("\n"));
+    $("op-wa").hidden = false;
+  }
+
+  // Enviar opinión
+  $("op-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if ($("op-web").value) return;                       // trampa para bots
+    const nombre = $("op-nombre").value.trim();
+    const pedido = $("op-pedido").value.trim() || null;
+    const comentario = $("op-texto").value.trim();
+    $("op-wa").hidden = true;
+    if (nombre.length < 2) return aviso_("Escribe tu nombre.", false);
+    if (!calif) return aviso_("Elige tu calificación con las estrellas.", false);
+    if (comentario.length < 5) return aviso_("Cuéntanos un poco más en tu opinión.", false);
+    if (!configurado) { aviso_("Por ahora envíanos tu opinión por WhatsApp.", false); return ofrecerWhatsApp(nombre, pedido, comentario); }
+    if (Date.now() - Number(leer("kobu_op_ultimo") || 0) < espera) return aviso_("Ya enviaste una opinión hace poco. Intenta de nuevo en unos minutos.", false);
+
+    const btn = $("op-enviar"); btn.disabled = true;
+    try {
+      // "return=minimal": quien envía no puede leer opiniones pendientes
+      const r = await fetch(api(), { method: "POST", headers: { ...cab, Prefer: "return=minimal" },
+        body: JSON.stringify({ nombre, pedido, calificacion: calif, comentario }) });
+      if (!r.ok) throw new Error(r.status);
+      guardar("kobu_op_ultimo", String(Date.now()));
+      $("op-form").reset(); calif = 0; pintarEstrellas();
+      aviso_("¡Gracias! Tu opinión se publicará cuando sea aprobada.", true);
+    } catch (err) {
+      aviso_("No pudimos enviar tu opinión. Intenta más tarde.", false);
+      ofrecerWhatsApp(nombre, pedido, comentario);
+    }
+    btn.disabled = false;
+  });
+
+  cargar();
+})();
+
 /* ---------- Contacto ---------- */
 const filas = [
   `<a class="crow" href="${waLink("Hola " + CONFIG.marca + ", quiero información.")}" target="_blank" rel="noopener"><span>WhatsApp</span><b>${CONFIG.telefonoVisible}</b></a>`,

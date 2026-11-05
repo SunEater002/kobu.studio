@@ -77,18 +77,22 @@ const CONFIG = {
     { titulo: "Uniforme de piloto", descripcion: "Estampado completo en playera blanca.", categoria: "Playeras", prenda: "playera", color: "#FFFFFF", arte: "rayas",
       imagenes: ["imagenes/trabajos/piloto-1.jpg", "imagenes/trabajos/piloto-2.jpg"] },
     { titulo: "Iglesia ilustrada", descripcion: "Pintura a color en la espalda y texto en el pecho.", categoria: "Playeras", prenda: "playera", color: "#14172A", arte: "sol",
-      imagenes: ["imagenes/trabajos/iglesia-1.jpg", "imagenes/trabajos/iglesia-2.jpg"] },
-    { titulo: "Sudadera combi retro", descripcion: "Diseño retro al frente y en la esplada.", categoria: "Sudaderas", prenda: "sudadera", color: "#FFFFFF", arte: "rayas",
-      imagenes: ["imagenes/trabajos/playera_combi.png", "imagenes/trabajos/playeracombi1.jpg", "imagenes/trabajos/playeracombi2.jpg"] },
-    { titulo: "Gym Collection", descripcion: "Frase en el pecho ", categoria: "Playeras", prenda: "playera", color: "#14172A", arte: "sol",
-      imagenes: ["imagenes/trabajos/gym1.png", "imagenes/trabajos/gym2.jpg", "imagenes/trabajos/gym3.jpg"] },
-    { titulo: "Gym Collection", descripcion: "Frase en el pecho ", categoria: "Playeras", prenda: "playera", color: "#14172A", arte: "rayas",
-      imagenes: ["imagenes/trabajos/gym1.1.png", "imagenes/trabajos/gym1.2.jpg", "imagenes/trabajos/gym1.3.jpg"] },
-      { titulo: "Gym Collection", descripcion: "Frase en el pecho ", categoria: "Playeras", prenda: "playera", color: "#14172A", arte: "sol",
-      imagenes: ["imagenes/trabajos/gym2.1.png", "imagenes/trabajos/gym2.2.jpg", "imagenes/trabajos/gym2.3.jpg"] },
-      { titulo: "Gorra", descripcion: "Logotipo en el frente", categoria: "Gorras", prenda: "gorra", color: "#14172A", arte: "rayas",
-      imagenes: ["imagenes/trabajos/gorra.png", "imagenes/trabajos/gorra1.png"] },
+      imagenes: ["imagenes/trabajos/iglesia-1.jpg", "imagenes/trabajos/iglesia-2.jpg"] }
   ],
+
+  /* Opiniones de clientes.
+     Las opiniones se guardan en Supabase (el mismo sistema de La Mordida de Bebe).
+     Llegan como "pendientes" y solo se muestran las que apruebes en admin.html.
+     supabaseKey es la llave pública (publishable / anon): es seguro que esté aquí.
+     NUNCA pongas aquí la llave "service_role". */
+  opiniones: {
+    supabaseUrl: "https://latrguqgztwwitskdhie.supabase.co",
+    supabaseKey: "sb_publishable_b4QTItO5aDbyH7zPGTzyKg_8kvs8UiJ",
+    tabla: "kobu_opiniones",
+    porPagina: 6,          // cuántas opiniones se ven antes de "Ver más"
+    esperaMinutos: 5       // tiempo mínimo entre opiniones desde el mismo navegador
+  },
+  opinionesIntro: "Lo que dicen quienes ya estrenaron su diseño con nosotros.",
 
   contactoTexto: "Cuéntanos qué quieres imprimir y te respondemos con precio y tiempo de entrega."
 };

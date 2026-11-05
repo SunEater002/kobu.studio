@@ -20,6 +20,7 @@
       <a href="#precios">Precios</a>
       <a href="#cotizar">Cotizar</a>
       <a href="#trabajos">Trabajos</a>
+      <a href="#opiniones">Opiniones</a>
       <a href="#contacto">Contacto</a>
     </nav>
     <a class="btn btn-main" data-wa-link target="_blank" rel="noopener">WhatsApp</a>
@@ -123,7 +124,33 @@
     </div>
   </section>
 
-  <section class="sec alt" id="contacto">
+  <section class="sec alt" id="opiniones">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Opiniones de clientes</h2>
+        <p id="op-intro"></p>
+      </div>
+      <div class="reviews" id="op-lista" aria-live="polite"></div>
+      <p class="more"><button type="button" class="chip" id="op-mas" hidden>Ver más opiniones</button></p>
+
+      <form class="op-form" id="op-form" novalidate>
+        <h3>Cuéntanos cómo te fue</h3>
+        <div class="field"><label for="op-nombre">Tu nombre</label><input id="op-nombre" maxlength="60" autocomplete="given-name" placeholder="Como quieres que aparezca"></div>
+        <div class="field"><label for="op-pedido">¿Qué pediste? (opcional)</label><input id="op-pedido" maxlength="80" placeholder="Ej. 12 playeras para mi equipo"></div>
+        <div class="field full"><label id="op-cal-label">Tu calificación</label><div class="star-pick" id="op-estrellas" role="group" aria-labelledby="op-cal-label"></div></div>
+        <div class="field full"><label for="op-texto">Tu opinión</label><textarea id="op-texto" maxlength="600" placeholder="¿Cómo quedó tu pedido? ¿Cómo fue la atención?"></textarea></div>
+        <div class="trampa" aria-hidden="true"><label for="op-web">No llenar</label><input id="op-web" tabindex="-1" autocomplete="off"></div>
+        <div class="op-foot">
+          <button class="btn btn-main" type="submit" id="op-enviar">Enviar mi opinión</button>
+          <p>Las opiniones se revisan antes de publicarse.</p>
+        </div>
+        <p class="op-aviso" id="op-aviso" role="status"></p>
+        <p class="op-alt" id="op-wa" hidden>También puedes <a id="op-wa-link" target="_blank" rel="noopener">mandarla por WhatsApp</a>.</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="sec" id="contacto">
     <div class="wrap contact">
       <div>
         <h2>Hablemos de tu diseño</h2>
