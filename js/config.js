@@ -80,7 +80,12 @@ const CONFIG = {
     { titulo: "Iglesia ilustrada", descripcion: "Pintura a color en la espalda y texto en el pecho.", categoria: "Playeras", prenda: "playera", color: "#14172A", arte: "sol",
       imagenes: ["imagenes/trabajos/iglesia-1.jpg", "imagenes/trabajos/iglesia-2.jpg"] },
     { titulo: "Combi", descripcion: "retraro urbano de una combi", categoria: "Sudaderas", prenda: "sudadera", color: "#14172A", arte: "rayas",
-      imagenes: ["imagenes/trabajos/sudadera1.png", "imagenes/trabajos/sudadera2.png", "imagenes/trabajos/sudaderaejem1.jpg", "imagenes/trabajos/sudaderaejem3.jpg"] }
+      imagenes: ["imagenes/trabajos/sudadera1.png", "imagenes/trabajos/sudadera2.png", "imagenes/trabajos/sudaderaejem1.jpg", "imagenes/trabajos/sudaderaejem3.jpg"] },
+    { titulo: "FRANCO", descripcion: "FRANCO", categoria: "Sudaderas", prenda: "sudadera", color: "#14172A", arte: "sol",
+      imagenes: ["imagenes/trabajos/franco1.jpg", "imagenes/trabajos/franco2.jpg"] },
+    { titulo: "diablos rojos", descripcion: "Estampado diablos rojos", categoria: "Playeras", prenda: "playera", color: "#FFFFFF", arte: "rayas",
+      imagenes: ["imagenes/trabajos/diablos1.jpg", "imagenes/trabajos/diablos2.jpg"] }
+    
   ],
 
   /* Opiniones de clientes.
