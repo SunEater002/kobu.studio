@@ -106,10 +106,8 @@ pintarCotizacion();
 /* ---------- Galería de trabajos ---------- */
 let filtro = "Todos";
 function pintarGaleria(){
-  const cats = ["Todos", ...new Set(CONFIG.trabajos.map(t => t.categoria))];
-  $("filtros").innerHTML = cats.length > 3 || cats.length === 3
-    ? cats.map(c=>`<button type="button" class="chip" data-cat="${c}" aria-pressed="${filtro===c}">${c}</button>`).join("")
-    : "";
+  const cats = ["Todos", ...new Set([...(CONFIG.categorias || []), ...CONFIG.trabajos.map(t => t.categoria)])];
+  $("filtros").innerHTML = cats.map(c=>`<button type="button" class="chip" data-cat="${c}" aria-pressed="${filtro===c}">${c}</button>`).join("");
   const lista = CONFIG.trabajos.filter(t => filtro === "Todos" || t.categoria === filtro);
   $("galeria").innerHTML = lista.length ? lista.map(t => {
     const i = CONFIG.trabajos.indexOf(t);
@@ -119,7 +117,7 @@ function pintarGaleria(){
       ${imgs.length > 1 ? `<div class="thumbs">${imgs.map((s,n)=>`<button type="button" data-w="${i}" data-n="${n}" aria-label="Ver imagen ${n+1} de ${t.titulo}" aria-pressed="${n===0}"><img src="${s}" alt=""></button>`).join("")}</div>` : ""}
       <figcaption><h3>${t.titulo}</h3><p>${t.descripcion || ""}</p></figcaption>
     </figure></article>`;
-  }).join("") : `<p class="empty">Aún no hay trabajos en esta categoría.</p>`;
+  }).join("") : `<p class="empty">Aún no hay trabajos en esta categoría. Pronto agregaremos más; mientras tanto <a href="#cotizar" style="color:var(--link);font-weight:600">cotiza el tuyo</a>.</p>`;
 }
 $("galeria").addEventListener("click", e => {
   const b = e.target.closest("button[data-w]"); if(!b) return;

@@ -62,7 +62,8 @@ const CONFIG = {
        si hay más de una, aparecen miniaturas para cambiar de foto.
        (Guarda tus fotos nuevas en la carpeta imagenes/trabajos.)
      - Si "imagenes" va vacía se muestra un dibujo de la prenda (usa prenda, color y arte).
-     - categoria: se crean filtros automáticos si hay 3 o más categorías distintas. */
+     - categoria: debe coincidir con una de las "categorias" de abajo (o escribe una nueva y se agrega sola). */
+  categorias: ["Playeras", "Sudaderas", "Gorras"],   // pestañas que siempre se ven, aunque aún no tengan trabajos
   trabajos: [
     { titulo: "Retrato a todo color", descripcion: "Estampado DTF grande en playera negra.", categoria: "Playeras", prenda: "playera", color: "#14172A", arte: "sol",
       imagenes: ["imagenes/trabajos/retrato-1.jpg"] },
