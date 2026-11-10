@@ -78,7 +78,9 @@ const CONFIG = {
     { titulo: "Uniforme de piloto", descripcion: "Estampado completo en playera blanca.", categoria: "Playeras", prenda: "playera", color: "#FFFFFF", arte: "rayas",
       imagenes: ["imagenes/trabajos/piloto-1.jpg", "imagenes/trabajos/piloto-2.jpg"] },
     { titulo: "Iglesia ilustrada", descripcion: "Pintura a color en la espalda y texto en el pecho.", categoria: "Playeras", prenda: "playera", color: "#14172A", arte: "sol",
-      imagenes: ["imagenes/trabajos/iglesia-1.jpg", "imagenes/trabajos/iglesia-2.jpg"] }
+      imagenes: ["imagenes/trabajos/iglesia-1.jpg", "imagenes/trabajos/iglesia-2.jpg"] },
+    { titulo: "Combi", descripcion: "retraro urbano de una combi", categoria: "Sudaderas", prenda: "sudadera", color: "#14172A", arte: "rayas",
+      imagenes: ["imagenes/trabajos/sudadera1.png", "imagenes/trabajos/sudadera2.png", "imagenes/trabajos/sudaderaejem1.jpg", "imagenes/trabajos/sudaderaejem3.jpg"] }
   ],
 
   /* Opiniones de clientes.
