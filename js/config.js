@@ -84,7 +84,11 @@ const CONFIG = {
     { titulo: "FRANCO", descripcion: "FRANCO", categoria: "Sudaderas", prenda: "sudadera", color: "#14172A", arte: "sol",
       imagenes: ["imagenes/trabajos/franco1.jpg", "imagenes/trabajos/franco2.jpg"] },
     { titulo: "diablos rojos", descripcion: "Estampado diablos rojos", categoria: "Playeras", prenda: "playera", color: "#FFFFFF", arte: "rayas",
-      imagenes: ["imagenes/trabajos/diablos1.jpg", "imagenes/trabajos/diablos2.jpg"] }
+      imagenes: ["imagenes/trabajos/diablos1.jpg", "imagenes/trabajos/diablos2.jpg"] },
+    { titulo: "Gorra Charreria", descripcion: "Estampado de gorra charreria", categoria: "Gorras", prenda: "gorra", color: "#FFFFFF", arte: "sol",
+      imagenes: ["imagenes/trabajos/gorra3.jpg", "imagenes/trabajos/gorra2.jpg", "imagenes/trabajos/gorra4.jpg"] },
+      { titulo: "Gorra Charreria Negra", descripcion: "Estampado de gorra charreria", categoria: "Gorras", prenda: "gorra", color: "#FFFFFF", arte: "rayas",
+      imagenes: ["imagenes/trabajos/gorra12.jpg", "imagenes/trabajos/gorra13.jpg", "imagenes/trabajos/gorrra11.jpg"] }
     
   ],
 
