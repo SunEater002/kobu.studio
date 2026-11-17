@@ -224,9 +224,10 @@ pintarGaleria();
     const pedido = $("op-pedido").value.trim() || null;
     const comentario = $("op-texto").value.trim();
     $("op-wa").hidden = true;
-    if (nombre.length < 2) return aviso_("Escribe tu nombre.", false);
+    if (nombre.length < 2 || nombre.length > 60) return aviso_("El nombre debe tener de 2 a 60 caracteres.", false);
+    if (pedido && pedido.length > 80) return aviso_("El pedido no puede superar 80 caracteres.", false);
     if (!calif) return aviso_("Elige tu calificación con las estrellas.", false);
-    if (comentario.length < 5) return aviso_("Cuéntanos un poco más en tu opinión.", false);
+    if (comentario.length < 5 || comentario.length > 600) return aviso_("La opinión debe tener de 5 a 600 caracteres.", false);
     if (!configurado) { aviso_("Por ahora envíanos tu opinión por WhatsApp.", false); return ofrecerWhatsApp(nombre, pedido, comentario); }
     if (Date.now() - Number(leer("kobu_op_ultimo") || 0) < espera) return aviso_("Ya enviaste una opinión hace poco. Intenta de nuevo en unos minutos.", false);
 
@@ -234,14 +235,28 @@ pintarGaleria();
     try {
       // "return=minimal": quien envía no puede leer opiniones pendientes
       const r = await fetch(api(), { method: "POST", headers: { ...cab, Prefer: "return=minimal" },
-        body: JSON.stringify({ nombre, pedido, calificacion: calif, comentario }) });
-      if (!r.ok) { console.error("Opiniones: error al enviar", r.status, await r.text()); throw new Error(r.status); }
+        body: JSON.stringify({ nombre, pedido, calificacion: calif, comentario, estado: "pendiente", respuesta: null }) });
+      if (!r.ok) {
+        const raw = await r.text();
+        let details;
+        try { details = JSON.parse(raw); } catch (_) { details = {}; }
+        console.error("Opiniones: error al enviar", { status: r.status, details, raw });
+        const codigo = details.code || String(r.status);
+        const msg = details.message || raw || "Error desconocido";
+        const error = new Error(msg);
+        error.codigo = codigo;
+        throw error;
+      }
       guardar("kobu_op_ultimo", String(Date.now()));
       $("op-form").reset(); calif = 0; pintarEstrellas();
       aviso_("¡Gracias! Tu opinión se publicará cuando sea aprobada.", true);
     } catch (err) {
       console.error("Opiniones:", err);
-      aviso_("No pudimos enviar tu opinión. Intenta más tarde.", false);
+      // Mostrar el código y el motivo devueltos por Supabase para poder diagnosticarlo.
+      // No mostrar aquí datos sensibles de sesión ni credenciales.
+      const codigo = err.codigo ? " (" + err.codigo + ")" : "";
+      const motivo = err.message || "Error de red o conexión";
+      aviso_("No pudimos enviar tu opinión" + codigo + ": " + motivo, false);
       ofrecerWhatsApp(nombre, pedido, comentario);
     }
     btn.disabled = false;
