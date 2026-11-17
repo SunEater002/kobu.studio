@@ -98,8 +98,8 @@ const CONFIG = {
      supabaseKey es la llave pública (publishable / anon): es seguro que esté aquí.
      NUNCA pongas aquí la llave "service_role". */
   opiniones: {
-    supabaseUrl: "https://latrguqgztwwitskdhie.supabase.co",
-    supabaseKey: "sb_publishable_b4QTItO5aDbyH7zPGTzyKg_8kvs8UiJ",
+    supabaseUrl: "https://gnnmzouseokyhzcmpicu.supabase.co/rest/v1/",
+    supabaseKey: "sb_publishable_njltYr8QHmkYwxN0u21Iug_wBUATCmQ",
     tabla: "kobu_opiniones",
     porPagina: 6,          // cuántas opiniones se ven antes de "Ver más"
     esperaMinutos: 5       // tiempo mínimo entre opiniones desde el mismo navegador
