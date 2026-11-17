@@ -187,9 +187,9 @@ pintarGaleria();
     if (!configurado) return vacio("Las opiniones estarán disponibles pronto.");
     try {
       const r = await fetch(api("?select=id,nombre,pedido,calificacion,comentario,respuesta,creado&estado=eq.aprobado&order=creado.desc&limit=100"), { headers: cab });
-      if (!r.ok) throw new Error(r.status);
+      if (!r.ok) { console.error("Opiniones: error al cargar", r.status, await r.text()); throw new Error(r.status); }
       todos = await r.json();
-    } catch (e) { return vacio("No pudimos cargar las opiniones. Intenta más tarde."); }
+    } catch (e) { console.error("Opiniones:", e); return vacio("No pudimos cargar las opiniones. Intenta más tarde."); }
     if (!todos.length) return vacio("Sé el primero en dejar tu opinión.");
     const prom = todos.reduce((s, c) => s + c.calificacion, 0) / todos.length;
     $("op-intro").textContent = CONFIG.opinionesIntro + " Promedio de " + prom.toFixed(1).replace(".0", "") + " de 5 en " + todos.length + (todos.length === 1 ? " opinión." : " opiniones.");
@@ -235,11 +235,12 @@ pintarGaleria();
       // "return=minimal": quien envía no puede leer opiniones pendientes
       const r = await fetch(api(), { method: "POST", headers: { ...cab, Prefer: "return=minimal" },
         body: JSON.stringify({ nombre, pedido, calificacion: calif, comentario }) });
-      if (!r.ok) throw new Error(r.status);
+      if (!r.ok) { console.error("Opiniones: error al enviar", r.status, await r.text()); throw new Error(r.status); }
       guardar("kobu_op_ultimo", String(Date.now()));
       $("op-form").reset(); calif = 0; pintarEstrellas();
       aviso_("¡Gracias! Tu opinión se publicará cuando sea aprobada.", true);
     } catch (err) {
+      console.error("Opiniones:", err);
       aviso_("No pudimos enviar tu opinión. Intenta más tarde.", false);
       ofrecerWhatsApp(nombre, pedido, comentario);
     }
